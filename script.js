@@ -49,9 +49,9 @@ window.addEventListener('scroll', () => {
     lastScroll = currentScroll;
 });
 
-// Animate skill bars on scroll
+// Animate skill bars and language bars on scroll
 const animateSkillBars = () => {
-    const skillBars = document.querySelectorAll('.skill-progress');
+    const skillBars = document.querySelectorAll('.skill-progress, .level-progress');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
