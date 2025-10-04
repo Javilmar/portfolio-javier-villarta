@@ -1,0 +1,21 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencias (si las agregas en el futuro)
+node_modules/
+package-lock.json
+
+# Archivos temporales
+*.tmp
+*.temp
