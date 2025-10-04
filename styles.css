@@ -20,6 +20,22 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+/* Dark mode variables */
+[data-theme="dark"] {
+    --primary-color: #818cf8;
+    --secondary-color: #a78bfa;
+    --accent-color: #f472b6;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --bg-light: #1f2937;
+    --bg-white: #111827;
+    --border-color: #374151;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -29,12 +45,14 @@ body {
     line-height: 1.6;
     color: var(--text-primary);
     background-color: var(--bg-white);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
+    transition: all 0.3s ease;
 }
 
 /* Navbar */
@@ -47,6 +65,10 @@ body {
     box-shadow: var(--shadow-sm);
     z-index: 1000;
     transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .navbar {
+    background-color: rgba(17, 24, 39, 0.98);
 }
 
 .nav-container {
@@ -109,6 +131,43 @@ body {
     cursor: pointer;
 }
 
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.theme-toggle:hover {
+    background-color: var(--bg-light);
+    transform: scale(1.1);
+}
+
+.theme-toggle i {
+    transition: all 0.3s ease;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
 .hamburger .bar {
     width: 25px;
     height: 3px;
@@ -124,6 +183,11 @@ body {
     align-items: center;
     padding: 6rem 2rem 4rem;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .hero {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
 }
 
 .hero-container {
@@ -306,6 +370,7 @@ body {
 .about {
     padding: 5rem 2rem;
     background-color: var(--bg-white);
+    transition: background-color 0.3s ease;
 }
 
 .about-content {
@@ -333,7 +398,7 @@ body {
     padding: 2rem;
     border-radius: 1rem;
     background-color: var(--bg-light);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
 }
 
 .stat:hover {
@@ -356,6 +421,7 @@ body {
 .projects {
     padding: 5rem 2rem;
     background-color: var(--bg-light);
+    transition: background-color 0.3s ease;
 }
 
 .projects-grid {
@@ -369,7 +435,7 @@ body {
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
 }
 
 .project-card:hover {
@@ -447,6 +513,7 @@ body {
 .skills {
     padding: 5rem 2rem;
     background-color: var(--bg-white);
+    transition: background-color 0.3s ease;
 }
 
 .skills-grid {
@@ -496,6 +563,7 @@ body {
 .languages {
     padding: 5rem 2rem;
     background-color: var(--bg-light);
+    transition: background-color 0.3s ease;
 }
 
 .languages-grid {
@@ -512,7 +580,7 @@ body {
     border-radius: 1rem;
     text-align: center;
     box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease;
 }
 
 .language-item:hover {
@@ -561,6 +629,7 @@ body {
 .contact {
     padding: 5rem 2rem;
     background-color: var(--bg-light);
+    transition: background-color 0.3s ease;
 }
 
 .contact-content {
@@ -644,10 +713,15 @@ body {
 
 /* Footer */
 .footer {
-    background-color: var(--text-primary);
+    background-color: #1f2937;
     color: white;
     text-align: center;
     padding: 2rem;
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] .footer {
+    background-color: #111827;
 }
 
 .footer p {
@@ -692,8 +766,22 @@ body {
         padding: 2rem 0;
     }
 
+    [data-theme="dark"] .nav-menu {
+        background-color: var(--bg-white);
+    }
+
     .nav-menu.active {
         left: 0;
+    }
+
+    .nav-controls {
+        gap: 0.5rem;
+    }
+
+    .theme-toggle {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
     }
 
     .hamburger {

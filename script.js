@@ -214,43 +214,58 @@ window.addEventListener('load', () => {
     document.body.classList.add('loaded');
 });
 
-// Theme toggle (optional - for future dark mode implementation)
-const createThemeToggle = () => {
-    const toggle = document.createElement('button');
-    toggle.classList.add('theme-toggle');
-    toggle.innerHTML = '<i class="fas fa-moon"></i>';
-    toggle.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        color: white;
-        border: none;
-        cursor: pointer;
-        box-shadow: var(--shadow-lg);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-    `;
+// Dark mode functionality
+const initDarkMode = () => {
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
     
-    toggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        const icon = toggle.querySelector('i');
-        icon.classList.toggle('fa-moon');
-        icon.classList.toggle('fa-sun');
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    body.setAttribute('data-theme', currentTheme);
+    
+    // Update icon based on current theme
+    const icon = themeToggle.querySelector('i');
+    if (currentTheme === 'dark') {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+    
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Update theme
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update icon
+        const icon = themeToggle.querySelector('i');
+        if (newTheme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+        
+        // Add smooth transition effect
+        body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        setTimeout(() => {
+            body.style.transition = '';
+        }, 300);
     });
-    
-    // Uncomment to enable theme toggle
-    // document.body.appendChild(toggle);
 };
 
-createThemeToggle();
+// Initialize dark mode when DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDarkMode);
+} else {
+    initDarkMode();
+}
 
 console.log('Portfolio de Javier Villarta cargado correctamente ✨');
 
