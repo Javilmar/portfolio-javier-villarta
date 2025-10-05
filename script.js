@@ -108,46 +108,90 @@ if (document.readyState === 'loading') {
     animateOnScroll();
 }
 
-// Contact form handling
-const contactForm = document.querySelector('.contact-form');
+// Contact form handling with EmailJS
+const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Get form data
         const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
+        const data = {
+            from_name: formData.get('name'),
+            from_email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message')
+        };
         
-        // Here you would normally send the data to a server
-        console.log('Form data:', data);
+        // Show loading state
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Enviando...';
+        submitBtn.disabled = true;
         
-        // Show success message
-        alert('¡Gracias por tu mensaje! Te responderé lo antes posible.');
-        contactForm.reset();
-        
-        // In a real application, you would send this to a backend:
-        /*
         try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            // Send email using EmailJS
+            const response = await emailjs.send(
+                'YOUR_SERVICE_ID', // Reemplaza con tu Service ID
+                'YOUR_TEMPLATE_ID', // Reemplaza con tu Template ID
+                data,
+                'YOUR_PUBLIC_KEY' // Reemplaza con tu Public Key
+            );
             
-            if (response.ok) {
-                alert('¡Gracias por tu mensaje! Te responderé lo antes posible.');
+            if (response.status === 200) {
+                // Show success message
+                showMessage('¡Gracias por tu mensaje! Te responderé lo antes posible.', 'success');
                 contactForm.reset();
             } else {
-                alert('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.');
+                throw new Error('Error en el envío');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.');
+            showMessage('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
-        */
     });
+}
+
+// Function to show messages
+function showMessage(text, type) {
+    // Remove existing messages
+    const existingMessage = document.querySelector('.form-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create new message
+    const message = document.createElement('div');
+    message.className = `form-message ${type}`;
+    message.textContent = text;
+    
+    // Style the message
+    message.style.cssText = `
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-weight: 500;
+        ${type === 'success' 
+            ? 'background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;' 
+            : 'background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;'
+        }
+    `;
+    
+    // Add to form
+    contactForm.appendChild(message);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        if (message.parentNode) {
+            message.remove();
+        }
+    }, 5000);
 }
 
 // Active navigation link based on scroll position
