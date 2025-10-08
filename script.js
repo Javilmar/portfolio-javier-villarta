@@ -108,7 +108,6 @@ if (document.readyState === 'loading') {
     animateOnScroll();
 }
 
-// Contact form handling with EmailJS
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
@@ -130,30 +129,49 @@ if (contactForm) {
         submitBtn.textContent = 'Enviando...';
         submitBtn.disabled = true;
         
-        try {
-            // Send email using EmailJS
-            const response = await emailjs.send(
-                'YOUR_SERVICE_ID', // Reemplaza con tu Service ID
-                'YOUR_TEMPLATE_ID', // Reemplaza con tu Template ID
-                data,
-                'YOUR_PUBLIC_KEY' // Reemplaza con tu Public Key
-            );
-            
-            if (response.status === 200) {
-                // Show success message
-                showMessage('¡Gracias por tu mensaje! Te responderé lo antes posible.', 'success');
-                contactForm.reset();
-            } else {
-                throw new Error('Error en el envío');
+        // Check if EmailJS is configured
+        const isEmailJSConfigured = typeof emailjs !== 'undefined' && 
+                                   window.EMAILJS_SERVICE_ID && 
+                                   window.EMAILJS_TEMPLATE_ID && 
+                                   window.EMAILJS_PUBLIC_KEY;
+        
+        if (isEmailJSConfigured) {
+            // Try EmailJS first
+            try {
+                const response = await emailjs.send(
+                    window.EMAILJS_SERVICE_ID,
+                    window.EMAILJS_TEMPLATE_ID,
+                    data,
+                    window.EMAILJS_PUBLIC_KEY
+                );
+                
+                if (response.status === 200) {
+                    showMessage('¡Gracias por tu mensaje! Te responderé lo antes posible.', 'success');
+                    contactForm.reset();
+                } else {
+                    throw new Error('Error en el envío');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.', 'error');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            showMessage('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.', 'error');
-        } finally {
-            // Reset button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+        } else {
+            // Fallback to mailto
+            const mailtoLink = `mailto:javiervillartamartinez@gmail.com?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(
+                `Nombre: ${data.from_name}\nEmail: ${data.from_email}\n\nMensaje:\n${data.message}`
+            )}`;
+            
+            window.location.href = mailtoLink;
+            
+            setTimeout(() => {
+                showMessage('Se abrirá tu cliente de correo. ¡Gracias por contactarme!', 'success');
+                contactForm.reset();
+            }, 500);
         }
+        
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     });
 }
 
